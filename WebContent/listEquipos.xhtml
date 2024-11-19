@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Lista de Equipos</title>
+</h:head>
+
+<h:body>
+<f:view>   
+    <h:form prependId="false">
+
+        <!-- Filtros de búsqueda -->
+        <h:panelGrid id="FilterGrid" columns="2">
+            <h:panelGroup>
+                <h:outputText value="Filtrar por Nombre: " />
+                <p:inputText value="#{equipoBean.nombreEquipo}">
+                    <p:ajax event="keyup" process="@this" update="equipos" listener="#{equipoBean.filtroPorNombre}" />
+                </p:inputText>
+            </h:panelGroup>
+        </h:panelGrid>
+
+        <!-- Tabla de Equipos -->
+        <h:panelGrid id="MainGrid" columns="1" columnClasses="columnGrid" styleClass="mainGrid">
+            <p:dataTable paginator="true" rows="5" id="equipos" value="#{equipoBean.listaDeEquipos}" var="equipo" columnClasses="columnTable columnTable1">
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="ID" />
+                    </f:facet>
+                    <h:outputText value="#{equipo.idEquipo}" />
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Nombre" />
+                    </f:facet>
+                    <h:outputText value="#{equipo.nombre}" />
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Dirección" />
+                    </f:facet>
+                    <h:outputText value="#{equipo.direccion}" />
+                </p:column>
+
+                <!-- Botones de Operaciones -->
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Operaciones" />
+                    </f:facet>
+                    <h:panelGroup>
+                        <p:commandButton value="Eliminar" onclick="PF('confirmDelete').show();">
+                            <f:setPropertyActionListener value="#{equipo.idEquipo}" target="#{equipoBean.selectedEquipo}" />  
+                        </p:commandButton>
+                        <p:commandButton value="Editar" actionListener="#{equipoBean.preactualizar}" oncomplete="PF('editDialog').show()" update="@form">
+                            <f:param name="selectedEquipo" value="#{equipo.idEquipo}" />
+                        </p:commandButton>
+                    </h:panelGroup>
+                </p:column>
+
+            </p:dataTable>
+        </h:panelGrid>
+
+        <!-- Boton para abrir dialogo de nuevo equipo -->
+        <h:panelGrid>
+            <p:commandButton value="Nuevo Equipo" oncomplete="PF('newEquipoDialog').show();" actionListener="#{equipoBean.crearEquipo}" update="@form"/>
+        </h:panelGrid>
+        
+        <h:panelGrid>
+    			<p:commandButton ajax="false" value="Volver" action="listado" />
+        </h:panelGrid>
+
+        <!-- Dialogo de confirmación para eliminar -->
+        <p:confirmDialog message="¿Estás seguro de que deseas eliminar este equipo?"
+                         showEffect="bounce" hideEffect="explode"  
+                         severity="alert" widgetVar="confirmDelete">  
+            <p:commandButton update="MainGrid" process="@this" value="Sí" actionListener="#{equipoBean.eliminar}" oncomplete="PF('confirmDelete').hide()"/>
+            <p:commandButton value="No" onclick="PF('confirmDelete').hide()" />   
+        </p:confirmDialog>  
+
+        <!-- Diálogo para crear un nuevo equipo -->
+        <p:dialog header="Crear Nuevo Equipo" widgetVar="newEquipoDialog" modal="true" width="400" id="newEquipoDialog">
+            <h:panelGrid columns="2">
+                <h:outputText value="Nombre:" />
+                <p:inputText value="#{equipoBean.equipo.nombre}" />
+
+                <h:outputText value="Dirección:" />
+                <p:inputText value="#{equipoBean.equipo.direccion}" />
+                
+                <h:panelGroup colspan="2" style="text-align:center;">
+                    <p:commandButton value="Guardar" actionListener="#{equipoBean.guardar}" process="newEquipoDialog" update="MainGrid" oncomplete="PF('newEquipoDialog').hide()" />
+                    <p:commandButton value="Cancelar" onclick="PF('newEquipoDialog').hide();" type="button" />
+                </h:panelGroup>
+            </h:panelGrid>
+        </p:dialog>
+
+        <!-- Diálogo para editar equipo existente -->
+        <p:dialog header="Editar Equipo" widgetVar="editDialog" modal="true" width="400">
+            <h:panelGrid columns="2" id="editDialogContent">
+                <h:outputText value="Nombre:" />
+                <p:inputText value="#{equipoBean.equipo.nombre}" />
+
+                <h:outputText value="Dirección:" />
+                <p:inputText value="#{equipoBean.equipo.direccion}" />
+                
+                <h:panelGroup colspan="2" style="text-align:center;">
+                    <p:commandButton update="equipos" process="@this" value="Actualizar" actionListener="#{equipoBean.actualizar}"
+                     oncomplete="PF('editDialog').hide();" onstart="console.log('actualizar presionado')" />
+                    <p:commandButton value="Cancelar" onclick="PF('editDialog').hide();" type="button" />
+                </h:panelGroup>
+            </h:panelGrid>
+        </p:dialog>
+        
+    </h:form>
+</f:view>
+</h:body>
+
+</html>
+

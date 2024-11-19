@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+ <h:head>
+        <title>Liga de Futbol</title>
+  </h:head>
+
+<body>
+ <f:view>   
+	<h:form prependId="false">
+
+ 		<h:panelGrid id="FilterGrid" columns="2">
+		      <h:panelGroup>
+		        <h:outputText value="#{msgs['lista.filtroJornada']}"></h:outputText>
+		   		<p:selectOneMenu value="#{partidoBean.jornada}" >
+		   			<f:selectItem  itemValue="Todas" itemLabel="#{msgs['lista.todas']}"/>
+		   			<f:selectItems value="#{ligaBean.jornadas}"/>
+		   			<p:ajax process="@this" update="partidos" listener="#{partidoBean.filtroJornada}" />
+		   		</p:selectOneMenu>
+		      </h:panelGroup>
+		      <h:panelGroup>
+		        <h:outputText value="#{msgs['lista.filtroEquipo']}"></h:outputText>
+		   		<p:inputText value="#{partidoBean.equipo}">
+		   			<p:ajax event="keyup" process="@this" update="partidos" listener="#{partidoBean.filtroEquipo}" />
+		   		</p:inputText>   
+		      </h:panelGroup>
+	    </h:panelGrid>
+		    
+		<h:panelGrid id="MainGrid" columns="1" columnClasses="columnGrid" styleClass="mainGrid">
+	        <p:dataTable paginator="true" rows="5" id="partidos"  value="#{partidoBean.listaDePartidos}" var="partido" columnClasses="columnTable columnTable1,columnTable columnTable2,columnTable columnTable3,columnTable columnTable4,columnTable columnTable5,columnTable columnTable6,columnTable columnTable7">
+	          <p:column>
+	            <f:facet name="header">
+	                <h:outputText  value="#{msgs['list.jornada']}"/>
+	            </f:facet>
+	            <h:outputText value="#{partido.jornada}" />
+	  	      </p:column>
+	  	      
+	  	      <p:column>
+	            <f:facet name="header">
+	                <h:outputText  value="#{msgs['list.fecha']}"/>
+	            </f:facet>
+	            <h:outputText value="#{partido.fecha}" >
+	            	<f:convertDateTime pattern="dd/MM/yyyy"/>
+	            </h:outputText>
+	  	      </p:column>
+	
+	          <p:column>
+	            <f:facet name="header">
+	                <h:outputText  value="#{msgs['list.local']}"/>
+	            </f:facet>
+	            <h:outputText value="#{partido.equipoLocal.nombre}" />
+	          </p:column>
+	
+	          <p:column>
+	            <f:facet name="header">
+	                <h:outputText  value="#{msgs['list.resultado']}"/>
+	            </f:facet>
+	            <h:outputText value="#{partido.golesLocal}-#{partido.golesVisitante}" />
+		     </p:column>
+	
+	         <p:column>
+	             <f:facet name="header">
+	                <h:outputText  value="#{msgs['list.visitante']}"/>
+	             </f:facet>
+	             <h:outputText value="#{partido.equipoVisitante.nombre}" />
+	         </p:column>
+	
+	       <p:column >
+	            <f:facet name="header">
+	                <h:outputText  value="#{msgs['list.observaciones']}"/>
+	            </f:facet>
+	            <h:outputText value="#{partido.observaciones}" />
+		  </p:column>
+		  
+		   <p:column >
+	            <f:facet name="header">
+	                <h:outputText  value="#{msgs['list.operaciones']}"/>
+	            </f:facet>
+	           <h:panelGroup>
+	            	<p:commandButton value="#{msgs['list.eliminar']}" onclick="PF('confirmation').show();" >
+	            		<f:setPropertyActionListener value="#{partido.idPartido}" target="#{partidoBean.selectedPartido}" /> 	
+	            	</p:commandButton>
+	            	<p:commandButton ajax="false" value="#{msgs['list.editar']}" action="editar" actionListener="#{partidoBean.actualizar}">
+	            		<f:param name="selectedPartido" value="#{partido.idPartido}" />
+	            	</p:commandButton>
+	            	<p:commandButton ajax="false" action="mapa" image="ui-icon ui-icon-pin-s" >
+	            		<f:setPropertyActionListener value="#{partido.equipoLocal.nombre}" target="#{ligaBean.equipo}" />  
+	            	</p:commandButton>	            	
+	            </h:panelGroup>
+		  </p:column>
+		  
+	    </p:dataTable>
+    </h:panelGrid>
+    <h:panelGrid>
+    <h:panelGrid>
+    <p:commandButton ajax="false" value="Ver Equipos" action="listEquipos" />
+	</h:panelGrid>
+        <p:commandButton ajax="false" value="#{msgs['list.nuevo']}" action="editar" actionListener="#{partidoBean.crearPartido}"/>
+    </h:panelGrid>
+     <p:confirmDialog message="#{msgs['lista.seguroBorrar']}"
+                	showEffect="bounce" hideEffect="explode"  
+                	severity="alert" widgetVar="confirmation">  
+                  
+			<p:commandButton update="MainGrid" process="@this" value="#{msgs['lista.si']}" actionListener="#{partidoBean.eliminar}"  oncomplete="PF('confirmation').hide()"/>
+			<p:commandButton value="#{msgs['lista.no']}" onclick="PF('confirmation').hide()" />   
+     </p:confirmDialog>  
+	</h:form>
+</f:view>
+</body>
+
+</html>

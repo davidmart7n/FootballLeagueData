@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      >
+
+
+<f:view>   
+		<h:form>
+		<h:panelGrid column="1" columnClasses="columnGrid" styleClass="mainGrid">
+			<h:outputText value="#{msgs['error.text']}"/>
+			<p:commandButton ajax="false" value="#{msgs['error.volver']}" action="listado" />
+		</h:panelGrid>
+		</h:form>
+</f:view>
+
+</html>
+

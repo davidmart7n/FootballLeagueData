@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+
+ <h:head>
+        <title>Liga de Futbol</title>
+  </h:head>
+
+
+<body>
+
+ <f:view>
+	<h:form prependId="false">
+    	<h:panelGrid id="MainGrid" columns="2" >
+				<h:outputText value="#{msgs['editPartido.Local']}" />
+	                <p:selectOneMenu id="equipoLocal" value="#{partidoBean.partido.equipoLocal}">
+    					<f:selectItems value="#{ligaBean.equipos}"/>
+    					<f:converter binding="#{StringToEquipoConverter}"/>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['editPartido.Visitante']}" />
+					<p:selectOneMenu id="equipoVisitante" value="#{partidoBean.partido.equipoVisitante}" converter="#{StringToEquipoConverter}">
+						<f:selectItems value="#{ligaBean.equipos}"/>
+						<f:converter binding="#{StringToEquipoConverter}"/>
+					</p:selectOneMenu>
+
+				<h:outputText value="#{msgs['editPartido.Jornada']}" />
+				<p:selectOneMenu value="#{partidoBean.partido.jornada}">
+      					<f:selectItems value="#{ligaBean.jornadas}"/>
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msgs['editPartido.Fecha']}" />
+				<p:calendar value="#{partidoBean.partido.fecha}" format="dd/MM/yyyy">
+					<f:validator validatorId="dateValidator"/>
+				</p:calendar>
+				
+				<h:outputText value="#{msgs['editPartido.resultado']}" />
+				<h:panelGroup>
+                                    <p:inputText id="GolesLocal" required="true" size="2" value="#{partidoBean.partido.golesLocal}">
+                                    	<f:validateLongRange minimum="0"/>
+                                    </p:inputText>
+                                    -
+                                    <p:inputText id="GolesVisitante" required="true" size="2" value="#{partidoBean.partido.golesVisitante}">
+                                    	<f:validateLongRange minimum="0"/>
+                                    </p:inputText>
+                                    <h:selectBooleanCheckbox value="#{partidoBean.porJugar}">
+                                        <h:outputText value="#{msgs['editPartido.porJugar']}" />
+                                	</h:selectBooleanCheckbox>
+				</h:panelGroup>
+
+                <h:outputText value="#{msgs['editPartido.observaciones']}"/>
+				<p:inputTextarea  rows="10" value="#{partidoBean.partido.observaciones}" />
+
+
+                
+				<p:commandButton ajax="false" value="#{msgs['editPartido.GuardarBt']}" action="#{partidoBean.guardaPartido}"/>
+				<p:commandButton ajax="false" value="#{msgs['editPartido.CancelarBt']}" action="listado" immediate="true"/>
+		</h:panelGrid>
+		<p:messages />
+	</h:form>
+</f:view>
+
+</body>
+
+</html>
+

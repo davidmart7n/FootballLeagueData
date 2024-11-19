@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+
+ <h:head>
+ 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"/>
+        <title>Liga de Futbol</title>
+  </h:head>
+
+
+<body>
+ 	<f:view>  
+            <h:form>
+            	<h:panelGrid column="1" columnClasses="columnGrid" styleClass="mainGrid">
+                	<p:gmap center="#{ligaBean.estadioLocation}" type="hybrid" zoom="16"
+                    	    style="width: 800px; height: 450px;" />
+                  	<p:commandButton ajax="false" value="#{msgs['error.volver']}" action="listado" />
+				</h:panelGrid>
+             </h:form>
+	</f:view>
+</body>
+</html>
+

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 06-oct-2010 17:23:23 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="domain.Partido" table="PARTIDOS">
+        <id name="idPartido" type="integer">
+            <column name="ID_PARTIDO" precision="22" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="equipoLocal" class="domain.Equipo" fetch="select" lazy="false">
+            <column name="ID_EQUIPO_LOCAL" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="equipoVisitante" class="domain.Equipo" fetch="select" lazy="false">
+            <column name="ID_EQUIPO_VISITANTE" precision="22" scale="0" />
+        </many-to-one>
+        <property name="jornada" type="integer">
+            <column name="JORNADA" precision="22" scale="0" />
+        </property>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="7" />
+        </property>
+        <property name="golesLocal" type="integer">
+            <column name="GOLES_LOCAL" precision="22" scale="0" />
+        </property>
+        <property name="golesVisitante" type="integer">
+            <column name="GOLES_VISITANTE" precision="22" scale="0" />
+        </property>
+        <property name="observaciones" type="string">
+            <column name="OBSERVACIONES" length="500" />
+        </property>
+    </class>
+    
+    <query name="all">from Partido</query>
+    <query name="byJornada">from Partido where jornada=?</query>
+    <query name="byEquipo">from Partido where lower(equipoLocal.nombre)=:eq or lower(equipoVisitante.nombre)=:eq</query>
+       
+    
+</hibernate-mapping>
